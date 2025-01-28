@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion Reservations{% endblock %}
+
+{% block body %}
+    <!-- Main Content -->
+    <div class="main-content p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2">Gestion des Réservations</h1>
+        </div>
+
+        <!-- Liste des réservations -->
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Client</th>
+                            <th>Film</th>
+                            <th>Séance</th>
+                            <th>Places</th>
+                            <th>Total</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reservation in reservations %}
+                            <tr>
+                                <td>#{{ reservation.id }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <!-- Vérifier si le client (utilisateur) existe -->
+                                        {% if reservation.utilisateur %}
+                                            <!-- Afficher l'image du profil ou une image par défaut -->
+                                            <img src="{{ reservation.utilisateur.profileImage ? reservation.utilisateur.profileImage : '/images/noProfile.jpg' }}" 
+                                                 class="rounded-circle me-2" 
+                                                 width="32" height="32" 
+                                                 alt="Avatar">
+                                            <div>
+                                                <div class="fw-bold">{{ reservation.utilisateur.firstName }} {{ reservation.utilisateur.lastName }}</div>
+                                                <small class="text-muted">{{ reservation.utilisateur.email }}</small>
+                                            </div>
+                                        {% else %}
+                                            <!-- Si l'utilisateur n'existe pas, afficher un message -->
+                                            <span class="text-muted">Utilisateur non trouvé</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>{{ reservation.movie.title }}</td>
+                                <td>{{ reservation.screening.time|date('d M - H:i') }}</td>
+                                <td>{{ reservation.seats|join(', ') }}</td>
+                                <td>{{ reservation.total }} €</td>
+                                <td>
+                                    <span class="badge 
+                                        {% if reservation.status == 'Confirmée' %}
+                                            bg-success
+                                        {% elseif reservation.status == 'En attente' %}
+                                            bg-warning
+                                        {% else %}
+                                            bg-danger
+                                        {% endif %}
+                                    ">
+                                        {{ reservation.status }}
+                                    </span>
+                                </td>
+                               <td>
+                                    <a href="{{ path('edit-reservation', {'id': reservation.id}) }}" class="btn btn-sm btn-outline-primary me-2">Modifier</a>
+                                    <!-- Formulaire de suppression -->
+                                    <form action="{{ path('delete-reservation', {'id': reservation.id}) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                    </form>
+                                </td>
+
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="8" class="text-center">Aucune réservation trouvée</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

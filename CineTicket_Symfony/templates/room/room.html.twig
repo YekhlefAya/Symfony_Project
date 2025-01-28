@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des salles{% endblock %}
+
+{% block body %}
+<div class="main-content p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">Gestion des Salles</h1>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSalleModal">
+            Ajouter une salle
+        </button>
+    </div>
+
+    <!-- Liste des salles -->
+    <div class="row g-4">
+        {% for room in rooms %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Salle {{ room.number }}</h5>
+                        <span class="badge 
+                            {% if room.status == 'Actif' %}
+                                bg-success
+                            {% elseif room.status == 'Inactif' %}
+                                bg-secondary
+                            {% elseif room.status == 'En maintenance' %}
+                                bg-danger
+                            {% endif %}">
+                            {{ room.status }}
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Capacité</small>
+                        <p class="mb-0">{{ room.capacity }} places</p>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Équipements</small>
+                        {% if room.equipment is not empty %}
+                            <p class="mb-0">{{ room.equipment | join(', ') }}</p>
+                        {% else %}
+                            <p class="mb-0 text-muted">Aucun équipement</p>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ path('edit-room', { id: room.id }) }}" class="btn btn-sm btn-outline-primary me-2">Modifier</a>
+                        <form method="post" action="{{ path('delete-room', { id: room.id }) }}" style="display:inline-block;">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal Ajout Salle -->
+<div class="modal fade" id="addSalleModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter une salle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addRoomForm" method="POST" action="{{ path('add-room') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Numéro de salle</label>
+                        <input type="number" class="form-control" id="roomNumber" name="roomNumber" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Capacité</label>
+                        <input type="number" class="form-control" id="capacity" name="capacity" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Équipements</label>
+                        <!-- Liste des équipements à cocher -->
+                        <div class="form-check">
+                            <input class="form-check-input equipment-checkbox" type="checkbox" name="equipment[]" value="3D" id="equipment3D">
+                            <label class="form-check-label" for="equipment3D">3D</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input equipment-checkbox" type="checkbox" name="equipment[]" value="Dolby Atmos" id="equipmentDolby">
+                            <label class="form-check-label" for="equipmentDolby">Dolby Atmos</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input equipment-checkbox" type="checkbox" name="equipment[]" value="4K" id="equipment4K">
+                            <label class="form-check-label" for="equipment4K">4K</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Statut</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="Actif">Actif</option>
+                            <option value="En maintenance">En maintenance</option>
+                            <option value="Inactif">Inactif</option>
+                        </select>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock %}

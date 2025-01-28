@@ -1,0 +1,34 @@
+.navbar-brand svg {
+    stroke: currentColor;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.btn-primary {
+    background-color: #4F46E5;
+    border-color: #4F46E5;
+}
+
+.btn-primary:hover {
+    background-color: #4338CA;
+    border-color: #4338CA;
+}
+
+.bg-primary {
+    background-color: #4F46E5 !important;
+}
+
+.text-primary {
+    color: #4F46E5 !important;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}

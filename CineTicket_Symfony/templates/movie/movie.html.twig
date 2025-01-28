@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Films{% endblock %}
+
+{% block body %}
+    <!-- Main Content -->
+    <div class="main-content p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 mb-0">Gestion des Films</h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFilmModal">
+                Ajouter un film
+            </button>
+        </div>
+
+        <!-- Films Table -->
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Film</th>
+                            <th>Genre</th>
+                            <th>Durée</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for movie in movies %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if movie.image %}
+                                            <img src="{{ asset(movie.image) }}" alt="{{ movie.title }}" class="rounded me-3" style="width: 48px; height: 48px; object-fit: cover;">
+                                        {% else %}
+                                            <img src="{{ asset('images/default_movie.png') }}" class="rounded me-3" style="width: 48px; height: 48px; object-fit: cover;">
+                                        {% endif %}
+                                        <div>
+                                            <h6 class="mb-0">{{ movie.title }}</h6>
+                                            <small class="text-muted">De {{ movie.director }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>{{ movie.genre }}</td>
+                                <td>{{ movie.duration|date('H:i') }} min</td>
+                                <td>
+                                    {% if movie.status == "À l'affiche" %}
+                                        <span class="badge bg-success">À l'affiche</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">À venir</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ path('edit-movie', { id: movie.id }) }}" class="btn btn-sm btn-outline-primary me-2">Modifier</a>
+                                    <form method="post" action="{{ path('delete-movie', { id: movie.id }) }}" style="display:inline-block;">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">Aucun film trouvé</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+   <!-- Modal Ajout Film -->
+<div class="modal fade" id="addFilmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un film</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{{ path('add-movie') }}" enctype="multipart/form-data">
+
+                    <div class="mb-3">
+                        <label class="form-label" for="title">Titre</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="director">Réalisateur</label>
+                        <input type="text" class="form-control" id="director" name="director" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="genre">Genre</label>
+                        <select class="form-select" id="genre" name="genre" required>
+                            <option value="Action">Action</option>
+                            <option value="Comédie">Comédie</option>
+                            <option value="Drame">Drame</option>
+                            <option value="Science-fiction">Science-fiction</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="duration">Durée </label>
+                        <input type="time" class="form-control" id="duration" name="duration" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="status">Statut</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="À l'affiche">À l'affiche</option>
+                            <option value="À venir">À venir</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="image">Image</label>
+                        <input type="file" class="form-control" id="image" name="image">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="synopsis">Synopsis</label>
+                        <textarea class="form-control" id="synopsis" name="synopsis" rows="3"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+    </div>
+{% endblock %}

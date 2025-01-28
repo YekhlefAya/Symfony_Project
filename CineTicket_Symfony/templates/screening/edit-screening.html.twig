@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la séance{% endblock %}
+
+{% block body %}
+<div class="main-content p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">Modifier la séance</h1>
+        <a href="{{ path('screenings') }}" class="btn btn-outline-secondary">Retour</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post" action="{{ path('update-screening', {'id': screening.id}) }}">
+                <div class="mb-3">
+                    <label class="form-label">Film</label>
+                    <select class="form-select" name="movie">
+                        {% for movie in movies %}
+                            <option value="{{ movie.id }}" {% if movie.id == screening.movie.id %}selected{% endif %}>
+                                {{ movie.title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-control" name="date" value="{{ screening.date|date('Y-m-d') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Heure</label>
+                            <input type="time" class="form-control" name="time" value="{{ screening.time|date('H:i') }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Salle</label>
+                    <select class="form-select" name="room">
+                        {% for room in rooms %}
+                            <option value="{{ room.id }}" {% if room.id == screening.room.id %}selected{% endif %}>
+                                Salle {{ room.number }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Version</label>
+                    <select class="form-select" name="version">
+                        <option value="VF" {% if screening.version == 'VF' %}selected{% endif %}>VF</option>
+                        <option value="VOSTFR" {% if screening.version == 'VOSTFR' %}selected{% endif %}>VOSTFR</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tarif</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" name="price" value="{{ screening.price }}" step="0.50">
+                        <span class="input-group-text">€</span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Statut</label>
+                    <select class="form-select" name="status">
+                        <option value="Active" {% if screening.status == 'Active' %}selected{% endif %}>Active</option>
+                        <option value="Annulée" {% if screening.status == 'Annulée' %}selected{% endif %}>Annulée</option>
+                        <option value="Complète" {% if screening.status == 'Complète' %}selected{% endif %}>Complète</option>
+                    </select>
+                </div>
+                <div class="text-end mt-4">
+                    <button type="button" class="btn btn-secondary me-2">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

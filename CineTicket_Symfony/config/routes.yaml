@@ -1,0 +1,109 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+movies:
+    path: /movies
+    controller: App\Controller\MovieController::index
+
+add-movie:
+    path: /movies/add
+    controller: App\Controller\MovieController::insert
+    methods: POST
+
+
+edit-movie:
+    path: /movies/edit/{id}
+    controller: App\Controller\MovieController::edit
+    methods: GET
+
+update-movie:
+    path: /movies/edit/{id}
+    controller: App\Controller\MovieController::update
+    methods: POST
+
+
+delete-movie:
+    path: /movies/delete/{id}
+    controller: App\Controller\MovieController::delete
+    methods: POST
+
+rooms:
+    path: /rooms
+    controller: App\Controller\RoomController::index
+
+add-room:
+    path: /rooms/add
+    controller: App\Controller\RoomController::insert
+    methods: POST
+
+edit-room:
+    path: /rooms/edit/{id}
+    controller: App\Controller\RoomController::edit
+    methods: GET
+
+update-room:
+    path: /rooms/edit/{id}
+    controller: App\Controller\RoomController::update
+    methods: POST
+
+delete-room:
+    path: /room/delete/{id}
+    controller: App\Controller\RoomController::delete
+    methods: POST
+
+screenings:
+    path: /screenings
+    controller: App\Controller\ScreeningController::index
+
+add-screening:
+    path: /screenings/add
+    controller: App\Controller\ScreeningController::insert
+    methods: POST
+
+edit-screening:
+    path: /screenings/edit/{id}
+    controller: App\Controller\ScreeningController::edit
+    methods: GET
+
+update-screening:
+    path: /screenings/edit/{id}
+    controller: App\Controller\ScreeningController::update
+    methods: POST
+
+
+delete-screening:
+    path: /screenings/delete/{id}
+    controller: App\Controller\ScreeningController::delete
+    methods: POST
+
+
+utilisateurs:
+    path: /utilisateurs
+    controller: App\Controller\UtilisateurController::index
+    
+delete-utilisateur:
+    path: /utilisateurs/delete/{id}
+    controller: App\Controller\UtilisateurController::delete
+    methods: POST
+
+reservations:
+    path: /reservations
+    controller: App\Controller\ReservationController::index
+
+edit-reservation:
+    path: /reservations/edit/{id}
+    controller: App\Controller\ReservationController::edit
+    methods: GET
+
+update-reservation:
+    path: /reservations/edit/{id}
+    controller: App\Controller\ReservationController::update
+    methods: POST
+
+delete-reservation:
+    path: /reservations/delete/{id}
+    controller: App\Controller\ReservationController::delete
+    methods: POST

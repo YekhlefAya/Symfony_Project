@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Utilisateurs{% endblock %}
+
+{% block body %}
+<!-- Main Content -->
+<div class="main-content p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">Gestion des Utilisateurs</h1>
+    </div>
+
+    <!-- Liste des utilisateurs -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Utilisateur</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                        <th>Statut</th>
+                        <th>Date d'inscription</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ user.profileImage ? user.profileImage : '/images/noProfile.jpg' }}" 
+                                         class="rounded-circle me-3" 
+                                         style="width: 40px; height: 40px; object-fit: cover;">
+                                    <div>
+                                        <h6 class="mb-0">{{ user.firstName }} {{ user.lastName }}</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.role }}</td>
+                            <td><span class="badge bg-{{ user.status == 'Actif' ? 'success' : 'danger' }}">{{ user.status }}</span></td>
+                            <td style="text-align: center;">{{ user.registrationDate|date('d/m/Y') }}</td>
+                            <td>
+                                <!-- Formulaire de suppression -->
+                                <form action="{{ path('delete-utilisateur', {'id': user.id}) }}" method="POST" 
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">Aucun utilisateur trouvé</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

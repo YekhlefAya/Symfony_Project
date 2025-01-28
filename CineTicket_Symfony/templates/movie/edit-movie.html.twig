@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un film{% endblock %}
+
+{% block body %}
+<div class="main-content p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">Modifier le film</h1>
+        <a href="{{ path('movies') }}" class="btn btn-outline-secondary">Retour</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ path('update-movie', {'id': movie.id}) }}" enctype="multipart/form-data">
+                <input type="hidden" name="_method" value="PATCH"> 
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label">Titre</label>
+                            <input type="text" class="form-control" name="title" value="{{ movie.title }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Réalisateur</label>
+                            <input type="text" class="form-control" name="director" value="{{ movie.director }}" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Genre</label>
+                                    <select class="form-select" name="genre" required>
+                                        <option value="Action" {% if movie.genre == 'Action' %}selected{% endif %}>Action</option>
+                                        <option value="Comédie" {% if movie.genre == 'Comédie' %}selected{% endif %}>Comédie</option>
+                                        <option value="Drame" {% if movie.genre == 'Drame' %}selected{% endif %}>Drame</option>
+                                        <option value="Science-fiction" {% if movie.genre == 'Science-fiction' %}selected{% endif %}>Science-fiction</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Durée</label>
+                                    <input type="time" class="form-control" name="duration" value="{{ movie.duration|date('H:i') }}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Synopsis</label>
+                            <textarea class="form-control" rows="4" name="synopsis" required>{{ movie.synopsis }}</textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Image actuelle</label>
+                            <img src="/{{ movie.image }}" class="img-fluid rounded mb-3" alt="Film">
+                            <input type="file" class="form-control" name="image">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Statut</label>
+                            <select class="form-select" name="status" required>
+                                <option value="À l'affiche" {% if movie.status == "À l'affiche" %}selected{% endif %}>À l'affiche</option>
+                                <option value="À venir" {% if movie.status == "À venir" %}selected{% endif %}>À venir</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-end mt-4">
+                    <a href="{{ path('movies') }}" class="btn btn-secondary me-2">Annuler</a>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

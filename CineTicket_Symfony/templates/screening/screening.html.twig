@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion séances{% endblock %}
+
+{% block body %}
+<!-- Main Content -->
+<div class="main-content p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">Gestion des Séances</h1>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSeanceModal">
+            Ajouter une séance
+        </button>
+    </div>
+
+    <!-- Liste des séances -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Film</th>
+                        <th>Date</th>
+                        <th>Heure</th>
+                        <th>Salle</th>
+                        <th>Places disponibles</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   <tbody>
+    {% for screening in screenings %}
+        <tr>
+            <!-- Film associé à la séance -->
+            <td>
+                <div class="d-flex align-items-center">
+                    <img src="{{ screening.movie.image }}" 
+                         class="rounded me-3" 
+                         style="width: 40px; height: 40px; object-fit: cover;">
+                    <span>{{ screening.movie.title }}</span>  <!-- Utilisez ici le titre du film -->
+                </div>
+            </td>
+
+            <!-- Affichage de la date et heure de la séance -->
+            <td>{{ screening.date|date('d M Y') }}</td>
+            <td>{{ screening.time|date('H:i') }}</td>
+
+            <!-- Salle associée à la séance -->
+            <td>Salle {{ screening.room.number }}</td>
+            <td>
+    {% if screening.room %}
+
+        <div class="progress" style="height: 20px;">
+            {% set reservedSeats = screening.getReservedSeats() %}
+            {% if reservedSeats > 0 %}
+                <div class="progress-bar bg-danger" style="width: {{ (reservedSeats / screening.room.capacity) * 100 }}%;">
+                    {{ reservedSeats }}/{{ screening.room.capacity }}
+                </div>
+            {% else %}
+                <div class="progress-bar bg-info" style="width: 0%;">Aucune place réservée</div>
+            {% endif %}
+        </div>
+    {% else %}
+        Salle non assignée
+    {% endif %}
+</td>
+            <td>
+            <a href="{{ path('edit-screening', { id: screening.id }) }}" class="btn btn-sm btn-outline-primary me-2">Modifier</a>
+                <!-- Formulaire de suppression -->
+            <form action="{{ path('delete-screening', {'id': screening.id}) }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette séance ?')">
+                    Supprimer
+                </button>
+            </form>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="6" class="text-center">Aucune séance disponible.</td>
+        </tr>
+    {% endfor %}
+</tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Modal Ajout Séance -->
+<div class="modal fade" id="addSeanceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter une séance</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ path('add-screening') }}" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Film</label>
+                        <select class="form-select" name="movie">
+                            {% for movie in movies %}
+                                <option value="{{ movie.id }}">{{ movie.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control" name="date">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Heure</label>
+                        <input type="time" class="form-control" name="time">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Salle</label>
+                        <select class="form-select" name="room">
+                            {% for room in rooms %}
+                                <option value="{{ room.id }}">Salle {{ room.number }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Version</label>
+                        <select class="form-select" name="version">
+                            <option value="VF">VF</option>
+                            <option value="VOSTFR">VOSTFR</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tarif</label>
+                        <input type="number" class="form-control" name="price" placeholder="12.00">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Statut</label>
+                        <select class="form-select" name="status">
+                            <option value="Active">Active</option>
+                            <option value="Complète">Complète</option>
+                        </select>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
+                </form>
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock %}
